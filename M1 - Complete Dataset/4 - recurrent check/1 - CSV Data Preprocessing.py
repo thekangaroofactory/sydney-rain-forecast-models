@@ -25,9 +25,10 @@ import numpy as np
 # -- Declare parameters
 
 # folder path
-input_path = 'dataset/incoming'
-output_path = 'dataset/preprocessed'
-archive_path = 'dataset/raw_archive'
+
+input_path = '../../datasets/raw_utf8/'
+output_path = '.'
+archive_path = '.'
 
 # file name
 output_file = 'formated_data.csv'
@@ -54,8 +55,9 @@ for file in file_list:
     target_url = path.join(input_path, file)
     
     # Open csv file (ignore line starting with " and blank lines)
-    raw_df = pd.read_csv(target_url, sep=',', comment='"', skip_blank_lines=True, encoding='ANSI')
-    
+    # switched encoding to utf-8 after file conversion (see readme in datasets folder).
+    raw_df = pd.read_csv(target_url, sep=',', comment='"', skip_blank_lines=True, encoding='utf-8')
+
     # Remove unwanted columns
     raw_df.drop(columns=['Unnamed: 0', 'Time of maximum wind gust'], inplace=True)
     
@@ -81,7 +83,7 @@ for file in file_list:
                            '3pm wind speed (km/h)':'WindSpeed3pm',
                            '3pm MSL pressure (hPa)':'Pressure3pm'},
                      inplace=True)
-    
+
     # Reorder columns
     col_list = ['Date',
                 'MinTemp',
@@ -103,6 +105,7 @@ for file in file_list:
                 'Cloud3pm',
                 'Temp9am',
                 'Temp3pm']
+
     raw_df = raw_df[col_list]
     
     # Cast columns to expected types
@@ -145,24 +148,24 @@ for file in file_list:
     raw_df_list.append(raw_df)
     
     # Move input file to archive
-    old_path_file = target_url
-    new_path_file = path.join(archive_path, file)
-    rename(old_path_file, new_path_file)
+    # old_path_file = target_url
+    # new_path_file = path.join(archive_path, file)
+    # rename(old_path_file, new_path_file)
 
 
 # -- 3. Merge and save
 
 # Merge df in list to output
-output_df = pd.concat(raw_df_list, ignore_index = True)
+output_df = pd.concat(raw_df_list, ignore_index=True)
 
 # Fill in RainTomorrow values (last raw remains as "-")
 for i in range(0, len(output_df)-1):
     output_df.loc[i, 'RainTomorrow'] = output_df.loc[i+1, 'RainToday']
     
-# Save ouput to file (append if exists)
+# Save output to file (append if exists)
 output_csv = path.join(output_path, output_file)
 header = not path.exists(output_csv)
-output_df.to_csv(output_csv, index = False, mode = 'a', header = header)
+output_df.to_csv(output_csv, index=False, mode='a', header=header)
 
 
 # -- 4. Check types
@@ -193,7 +196,7 @@ colt = {'Date': str,
         'RainTomorrow': str}
 
 # load
-test_df = pd.read_csv(output_csv, sep = ',', dtype = colt, parse_dates = ['Date'])
+test_df = pd.read_csv(output_csv, sep=',', dtype=colt, parse_dates=['Date'])
 
 # print
 print(test_df)

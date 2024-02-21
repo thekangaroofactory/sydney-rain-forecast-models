@@ -18,13 +18,18 @@ import math
 # -- Input parameters
 
 # Raw dataset csv file name
-raw_dataset_url = 'weather_aus_raw.csv'
+# raw_dataset_url = 'weather_aus_raw.csv'
+raw_dataset_url = '../4 - recurrent check/formated_data.csv'
+
+# output processed dataset csv file name
+processed_dataset_url = '../4 - recurrent check/processed_dataset_v1.csv'
+
 
 # JSON report file name
-json_report_url = 'dataset_report.json'
+json_report_url = '../outputs/resources/dataset_report.json'
 
 # Mean by location csv file name
-mean_by_location_url = 'means_by_location.csv'
+mean_by_location_url = '../outputs/resources/means_by_location.csv'
 
 # Categorical feature bucket mapping
 bucket_mapping = True
@@ -38,9 +43,6 @@ list_remove = ['RISK_MM']
 
 # list of NaN default values
 categorical_nan = ['None', 'UNK', 'UNK', 'UNK', 'No', 'None']
-
-# output processed dataset csv file name
-processed_dataset_url = 'processed_dataset__v1.csv'
 
 
 # -- Load JSON report & extract lists
@@ -93,7 +95,7 @@ if bucket_mapping:
     for feature in bucket_features:
         
         # open corresponding mapping_feature.json file
-        json_mapping_url = 'mapping_' + feature + '.json'
+        json_mapping_url = 'E:/Portfolio/Python/Projects/sydney-rain-forecast-models/M1 - Complete Dataset/outputs/resources/mapping_' + feature + '.json'
         with open(json_mapping_url) as json_file:
             data = json.load(json_file)
         mapping_list.append(data)
@@ -160,10 +162,10 @@ for chunk in df_chunk:
     
         # copy local input
         output = grp_df.copy()
-    
-    
+
         # Step.1: Split Date into Day, Month, Year and drop Date, Day, Year
-        output[['Day', 'Month', 'Year']] = output['Date'].str.split("/", expand=True)
+        # output[['Day', 'Month', 'Year']] = output['Date'].str.split("/", expand=True)
+        output[['Day', 'Month', 'Year']] = output['Date'].str.split("-", expand=True)
         output.drop(['Date', 'Day', 'Year'], axis=1, inplace=True)
     
     
