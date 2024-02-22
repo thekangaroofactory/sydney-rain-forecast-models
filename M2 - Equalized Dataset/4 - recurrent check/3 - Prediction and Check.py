@@ -18,13 +18,13 @@ import tensorflow as tf
 # -- Declare parameters
 
 # Input path
-input_path = 'dataset/processed'
+input_path = '.'
 
 # Input file
 input_data_url = path.join(input_path, 'processed_dataset_v1.csv')
 
 # Resource files path
-resource_path = 'resources'
+resource_path = '../outputs/model'
 
 # Model file
 model_url = path.join(resource_path, 'rain_tomorrow_v2_equalized.h5')
@@ -219,7 +219,7 @@ print(raw_predictions)
 # -- Export result
 
 # Load
-dataset_path = 'dataset/preprocessed'
+dataset_path = '.'
 dataset_url = path.join(dataset_path, 'formated_data.csv')
 dataset_df = pd.read_csv(dataset_url)
 
@@ -230,7 +230,7 @@ df = pd.DataFrame(raw_predictions, columns=['Prediction'])
 rain_tomorrow = pd.concat([dataset_df, df], axis = 1)
 
 # Save to .csv
-output_path = 'output'
+output_path = '.'
 output_url = path.join(output_path, 'predictions.csv')
 rain_tomorrow.to_csv(output_url, header = True, index = False)
 

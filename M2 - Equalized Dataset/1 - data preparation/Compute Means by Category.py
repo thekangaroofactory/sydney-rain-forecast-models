@@ -15,10 +15,10 @@ import numpy as np
 # -- Input parameters
 
 # csv file name
-csv_filename = 'equalized_dataset_raw.csv'
+csv_filename = '../../datasets/equalized_dataset_raw.csv'
 
 # output csv file name
-output_csv = 'means_by_location.csv'
+output_csv = '../outputs/resources/means_by_location.csv'
 
 # chunk size
 chunk_size = 10000

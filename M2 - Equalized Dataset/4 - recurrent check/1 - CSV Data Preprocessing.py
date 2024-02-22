@@ -22,9 +22,9 @@ import numpy as np
 # -- Declare parameters
 
 # folder path
-input_path = 'dataset/incoming'
-output_path = 'dataset/preprocessed'
-archive_path = 'dataset/raw_archive'
+input_path = '../../datasets/raw_utf8'
+output_path = '.'
+# archive_path = 'dataset/raw_archive'
 
 # file name
 output_file = 'formated_data.csv'
@@ -51,32 +51,32 @@ for file in file_list:
     target_url = path.join(input_path, file)
     
     # Open csv file (ignore line starting with " and blank lines)
-    raw_df = pd.read_csv(target_url, sep = ',', comment='"', skip_blank_lines=True, encoding='ANSI')
+    raw_df = pd.read_csv(target_url, sep=',', comment='"', skip_blank_lines=True, encoding='utf-8')
     
     # Remove unwanted columns
     raw_df.drop(columns=['Unnamed: 0', 'Time of maximum wind gust'], inplace=True)
     
     # Rename columns to fit original data
-    raw_df.rename(columns={'Date':'Date',
-                           'Minimum temperature (°C)':'MinTemp',
-                           'Maximum temperature (°C)':'MaxTemp',
-                           'Rainfall (mm)':'Rainfall',
-                           'Evaporation (mm)':'Evaporation',
-                           'Sunshine (hours)':'Sunshine',
-                           'Direction of maximum wind gust ':'WindGustDir',
-                           'Speed of maximum wind gust (km/h)':'WindGustSpeed',
-                           '9am Temperature (°C)':'Temp9am',
-                           '9am relative humidity (%)':'Humidity9am',
-                           '9am cloud amount (oktas)':'Cloud9am',
-                           '9am wind direction':'WindDir9am',
-                           '9am wind speed (km/h)':'WindSpeed9am',
-                           '9am MSL pressure (hPa)':'Pressure9am',
-                           '3pm Temperature (°C)':'Temp3pm',
-                           '3pm relative humidity (%)':'Humidity3pm',
-                           '3pm cloud amount (oktas)':'Cloud3pm',
-                           '3pm wind direction':'WindDir3pm',
-                           '3pm wind speed (km/h)':'WindSpeed3pm',
-                           '3pm MSL pressure (hPa)':'Pressure3pm'},
+    raw_df.rename(columns={'Date': 'Date',
+                           'Minimum temperature (°C)': 'MinTemp',
+                           'Maximum temperature (°C)': 'MaxTemp',
+                           'Rainfall (mm)': 'Rainfall',
+                           'Evaporation (mm)': 'Evaporation',
+                           'Sunshine (hours)': 'Sunshine',
+                           'Direction of maximum wind gust ': 'WindGustDir',
+                           'Speed of maximum wind gust (km/h)': 'WindGustSpeed',
+                           '9am Temperature (°C)': 'Temp9am',
+                           '9am relative humidity (%)': 'Humidity9am',
+                           '9am cloud amount (oktas)': 'Cloud9am',
+                           '9am wind direction': 'WindDir9am',
+                           '9am wind speed (km/h)': 'WindSpeed9am',
+                           '9am MSL pressure (hPa)': 'Pressure9am',
+                           '3pm Temperature (°C)': 'Temp3pm',
+                           '3pm relative humidity (%)': 'Humidity3pm',
+                           '3pm cloud amount (oktas)': 'Cloud3pm',
+                           '3pm wind direction': 'WindDir3pm',
+                           '3pm wind speed (km/h)': 'WindSpeed3pm',
+                           '3pm MSL pressure (hPa)': 'Pressure3pm'},
                      inplace=True)
     
     # Reorder columns
@@ -127,13 +127,13 @@ for file in file_list:
                    'WindDir3pm']
     raw_df[strcol_list] = raw_df[strcol_list].astype(str)
     # Date column
-    raw_df['Date'] = pd.to_datetime(raw_df['Date'],format = '%Y-%m-%d')
+    raw_df['Date'] = pd.to_datetime(raw_df['Date'], format='%Y-%m-%d')
     
     # Replace " " values by NA
-    raw_df.replace(r'^\s*$', np.nan, regex = True, inplace = True)
+    raw_df.replace(r'^\s*$', np.nan, regex=True, inplace=True)
     
     # Add columns to fit original data
-    raw_df.insert(loc = 0, column = 'Location', value = "Sydney") # check file name IDCJDW2124.202008.csv to get location mapping
+    raw_df.insert(loc=0, column='Location', value="Sydney") # check file name IDCJDW2124.202008.csv to get location mapping
     raw_df['RainToday'] = ['Yes' if x > 0 else 'No' for x in raw_df['Rainfall']]
     raw_df['RISK_MM'] = 0 # will be ignored anyway
     raw_df['RainTomorrow'] = "NA" # default value
@@ -142,15 +142,15 @@ for file in file_list:
     raw_df_list.append(raw_df)
     
     # Move input file to archive
-    old_path_file = target_url
-    new_path_file = path.join(archive_path, file)
-    rename(old_path_file, new_path_file)
+    # old_path_file = target_url
+    # new_path_file = path.join(archive_path, file)
+    # rename(old_path_file, new_path_file)
 
 
 # -- 3. Merge and save
 
 # Merge df in list to output
-output_df = pd.concat(raw_df_list, ignore_index = True)
+output_df = pd.concat(raw_df_list, ignore_index=True)
 
 # Fill in RainTomorrow values (last raw remains as "-")
 for i in range(0, len(output_df)-1):
@@ -159,7 +159,7 @@ for i in range(0, len(output_df)-1):
 # Save ouput to file (append if exists)
 output_csv = path.join(output_path, output_file)
 header = not path.exists(output_csv)
-output_df.to_csv(output_csv, index = False, mode = 'a', header = header)
+output_df.to_csv(output_csv, index=False, mode='a', header=header)
     
 
 # -- 4. Check types
@@ -189,7 +189,7 @@ colt = {'Date': str,
         'RainToday': str,
         'RainTomorrow': str}
 
-test_df = pd.read_csv(output_csv, sep = ',', dtype = colt, parse_dates = ['Date'])
+test_df = pd.read_csv(output_csv, sep=',', dtype=colt, parse_dates=['Date'])
 
 print(test_df)
 print(test_df.dtypes)

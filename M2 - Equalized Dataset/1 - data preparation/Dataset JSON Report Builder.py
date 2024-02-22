@@ -29,9 +29,7 @@ import json
 # -- Input parameters
 
 # csv file path and name
-working_directory = '../equalize training set'
-filename = 'equalized_dataset_raw'
-dataset_url = working_directory + '\\' + filename + '.csv'
+dataset_url = '../../datasets/equalized_dataset_raw.csv'
 
 # chunk size
 chunk_size = 10000
@@ -154,6 +152,6 @@ json_dict['mean'] = mean
 
 
 # save dict as json file
-json_export_file = working_directory + '\dataset_report.json'
+json_export_file = '../outputs/resources/dataset_report.json'
 with open(json_export_file, 'w') as fp:
     json.dump(json_dict, fp, indent=4)
